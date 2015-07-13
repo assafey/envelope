@@ -63,6 +63,9 @@ public:
 
 	bool Put(const char* key, const ElementType* element)
 	{
+		if (Exists(key))
+			return false;
+
 		int h = Hash(key);
 
 		for (int i = 0; i < m_Depth; i++)
@@ -77,21 +80,30 @@ public:
 		return false;
 	}
 
+	bool Peek(const char* key, ElementType* element)
+	{
+		int h = Hash(key);
+
+		int index = Find(h, key);
+		if (index >= 0)
+		{
+			*element = m_Elements[h][index].Data;
+			return true;
+		}
+
+		return false;
+	}
+
 	bool Get(const char* key, ElementType* element)
 	{
 		int h = Hash(key);
 
-		for (int i = 0; i < m_Depth; i++)
+		int index = Find(h, key);
+		if (index >= 0)
 		{
-			if (m_Elements[h][i].Used == 1)
-			{
-				if (m_Elements[h][i].Compare(key))
-				{
-					*element = m_Elements[h][i].Data;
-					m_Elements[h][i].Reset();
-					return true;
-				}
-			}
+			*element = m_Elements[h][index].Data;
+			m_Elements[h][index].Reset();
+			return true;
 		}
 
 		return false;
@@ -123,7 +135,33 @@ public:
 		return size;
 	}
 
+	bool Exists(const char* key)
+	{
+		int h = Hash(key);
+
+		return Find(h, key) >= 0;
+	}
+
 private:
+
+	int Find(int h, const char* key)
+	{
+		int index = -1;
+
+		for (int i = 0; i < m_Depth; i++)
+		{
+			if (m_Elements[h][i].Used == 1)
+			{
+				if (m_Elements[h][i].Compare(key))
+				{
+					index = i;
+					break;
+				}
+			}
+		}
+
+		return index;
+	}
 
 	int Hash(const char* key)
 	{
