@@ -27,10 +27,10 @@ class Stack
 
 public:
 
-	Stack(unsigned int depth = STACK_DEFAULT_DEPTH) : m_Depth(depth)
+	Stack(unsigned int depth = STACK_DEFAULT_DEPTH) :
+		m_Depth(depth), m_Top(-1)
 	{
 		m_Elements = new ElementType[m_Depth];
-		m_Top = -1;
 	}
 
 	~Stack()
@@ -41,7 +41,7 @@ public:
 
 	bool Peek(ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		if (Empty())
 			return false;
@@ -53,7 +53,7 @@ public:
 
 	bool Push(const ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		if (Full())
 			return false;
@@ -66,7 +66,7 @@ public:
 
 	bool Pop(ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		if (Empty())
 			return false;
@@ -81,7 +81,7 @@ public:
 
 	bool Empty()
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		return m_Top < 0;
 	}
@@ -96,7 +96,7 @@ public:
 
 	unsigned int Size()
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		return m_Top + 1;
 	}

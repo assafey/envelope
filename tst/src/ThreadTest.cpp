@@ -17,7 +17,7 @@ void ThreadTest()
 {
 	Thread thread("tTest");
 
-	Check.Subject("===== Thread Test Start =====");
+	Check.Start("Thread");
 
 	bool started = thread.Start(Task, NULL);
 	Check.True(started, "thread started");
@@ -29,5 +29,5 @@ void ThreadTest()
 	
 	Check.Pass("Finished.");
 
-	Check.Subject("===== Thread Test End =====\n");
+	Check.End("Thread");
 }

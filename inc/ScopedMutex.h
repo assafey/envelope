@@ -24,7 +24,7 @@ public:
 	 * Description:
 	 *
 	 **************************************************/
-	ScopedMutex(Mutex* mutex);
+	ScopedMutex(Mutex& mutex);
 
 	/**************************************************
 	 * Description:

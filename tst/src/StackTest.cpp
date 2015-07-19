@@ -6,7 +6,7 @@ void StackTest()
 	Stack<int> s(3);
 	int a = 'a', b = 'b', c = 'c';
 
-	Check.Subject("===== Stack Test Start =====");
+	Check.Start("Stack");
 
 	s.Push(&a);
 	Check.Equals(s.Size(), 1U, "size after push 1");
@@ -39,5 +39,5 @@ void StackTest()
 
 	Check.True(s.Empty(), "stack is empty");
 
-	Check.Subject("===== Stack Test End =====\n");
+	Check.End("Stack");
 }
