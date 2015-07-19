@@ -9,6 +9,12 @@
 - HashMap		: template class that implements a generic hash-map.
 - Queue			: template class that implements a generic queue.
  
-**Note**: The project made for embedded systems, therefore no `new` or other dynamic allocations allowed on runtime. 
+**Note**: 
+The project was made for embedded systems, therefore no `new` or other dynamic allocations allowed on runtime. 
+
+**Project Environment**:
+Eclipse IDE for C/C++ Developers
+Version: Mars Release (4.5.0)
+Build id: 20150621-1200
 
 

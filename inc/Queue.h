@@ -24,14 +24,15 @@ private:
 	const unsigned int 	m_Depth;
 	int 				m_Top;
 	int 				m_Bottom;
+	unsigned int 		m_Count;
 	Mutex				m_Mutex;
 
 public:
 
-	Queue(unsigned int depth = QUEUE_DEFAULT_DEPTH) : m_Depth(depth)
+	Queue(unsigned int depth = QUEUE_DEFAULT_DEPTH) :
+		m_Depth(depth), m_Top(-1), m_Bottom(-1), m_Count(0)
 	{
 		m_Elements = new ElementType[m_Depth];
-		m_Top = m_Bottom = 0;
 	}
 
 	~Queue()
@@ -42,7 +43,7 @@ public:
 
 	bool Front(ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		if (Empty())
 			return false;
@@ -54,7 +55,7 @@ public:
 
 	bool Back(ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
 		if (Empty())
 			return false;
@@ -66,47 +67,52 @@ public:
 
 	bool Put(const ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
-		int top = m_Top;
-
-		top++;
-		if (top >= m_Depth)
+		if (Full())
 			return false;
 
-		m_Top = top;
-		m_Elements[m_Top] = *element;
+		if (m_Top < 0)
+			m_Top = 0;
+
+		m_Bottom = (m_Bottom + 1) % m_Depth;
+		m_Count++;
+
+		m_Elements[m_Bottom] = *element;
 
 		return true;
 	}
 
 	bool Poll(ElementType* element)
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
-		if (Empty())
+		if (!Front(element))
 			return false;
 
-		if (!Peek(element))
-			return false;
-
-		m_Top--;
+		m_Top = (m_Top + 1) % m_Depth;
+		m_Count--;
 
 		return true;
 	}
 
 	bool Empty()
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
-		return m_Top == m_Bottom;
+		return Size() == 0;
+	}
+
+	bool Full()
+	{
+		return Size() == m_Depth;
 	}
 
 	unsigned int Size()
 	{
-		ScopedMutex scope(&m_Mutex);
+		ScopedMutex scope(m_Mutex);
 
-		return m_Top - m_Bottom + 1;
+		return m_Count;
 	}
 };
 

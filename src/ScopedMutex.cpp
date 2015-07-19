@@ -10,21 +10,13 @@
 
 #include "ScopedMutex.h"
 
-ScopedMutex::ScopedMutex(Mutex* mutex)
+ScopedMutex::ScopedMutex(Mutex& mutex) :
+	m_MutexPtr(&mutex)
 {
-	if (mutex)
-	{
-		m_MutexPtr = mutex;
-		m_MutexPtr->Lock();
-	}
-	else
-	{
-		m_MutexPtr = NULL;
-	}
+	m_MutexPtr->Lock();
 }
 
 ScopedMutex::~ScopedMutex()
 {
-	if (m_MutexPtr)
-		m_MutexPtr->Unlock();
+	m_MutexPtr->Unlock();
 }

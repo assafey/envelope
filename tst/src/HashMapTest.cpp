@@ -4,7 +4,7 @@ void HashMapTest()
 {
 	HashMap<int, 5> map;
 
-	Check.Subject("===== HashMap Test Start =====");
+	Check.Start("HashMap");
 
 	int val = 10;
 	map.Put("assaf", &val);
@@ -37,5 +37,5 @@ void HashMapTest()
 
 	Check.True(map.Empty(), "map is empty");
 
-	Check.Subject("===== HashMap Test End =====\n");
+	Check.End("HashMap");
 }

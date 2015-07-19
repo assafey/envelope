@@ -53,7 +53,7 @@ bool Thread::Start
 	void* param				// In: optional - parameter to thread function
 )
 {
-	ScopedMutex scope(&m_Mutex);
+	ScopedMutex scope(m_Mutex);
 
 	m_TheFunc = tFunc;
 	m_Param = param;

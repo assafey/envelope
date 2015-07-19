@@ -8,9 +8,14 @@ class TestCheck
 {
 public:
 
-	void Subject(const char* title)
+	void Start(const char* testName)
 	{
-		printf("Check Subject: %s\n", title);
+		printf("\n====== %s Test Started =====\n", testName);
+	}
+
+	void End(const char* testName)
+	{
+		printf("====== %s Test Ended =====\n", testName);
 	}
 
 	template<typename T>

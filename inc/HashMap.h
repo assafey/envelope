@@ -52,13 +52,21 @@ private:
 
 	Element_t*			m_Elements[MapSize];
 	const unsigned int 	m_Depth;
+	unsigned int 		m_Count;
 
 public:
 
-	HashMap(unsigned int depth = HASH_MAP_DEFAULT_DEPTH) : m_Depth(depth)
+	HashMap(unsigned int depth = HASH_MAP_DEFAULT_DEPTH) :
+		m_Depth(depth), m_Count(0)
 	{
 		for (int i = 0; i < MapSize; i++)
 			m_Elements[i] = new Element_t[m_Depth];
+	}
+
+	~HashMap()
+	{
+		for (int i = 0; i < MapSize; i++)
+			delete[] m_Elements[i];
 	}
 
 	bool Put(const char* key, const ElementType* element)
@@ -73,6 +81,7 @@ public:
 			if (m_Elements[h][i].Used == 0)
 			{
 				m_Elements[h][i].Set(key, element);
+				m_Count++;
 				return true;
 			}
 		}
@@ -103,6 +112,7 @@ public:
 		{
 			*element = m_Elements[h][index].Data;
 			m_Elements[h][index].Reset();
+			m_Count--;
 			return true;
 		}
 
@@ -121,18 +131,7 @@ public:
 
 	unsigned int Size()
 	{
-		int size = 0;
-
-		for (int i = 0; i < MapSize; i++)
-		{
-			for (int j = 0; j < m_Depth; j++)
-			{
-				if (m_Elements[i][j].Used != 0)
-					size++;
-			}
-		}
-
-		return size;
+		return m_Count;
 	}
 
 	bool Exists(const char* key)
