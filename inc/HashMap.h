@@ -11,6 +11,8 @@
 #define _HASH_MAP_H_
 
 #include <string.h>
+#include "Mutex.h"
+#include "ScopedMutex.h"
 
 #define HASH_MAP_KEY_LEN 20
 #define HASH_MAP_DEFAULT_DEPTH 10
@@ -53,6 +55,7 @@ private:
 	Element_t*			m_Elements[MapSize];
 	const unsigned int 	m_Depth;
 	unsigned int 		m_Count;
+	Mutex 				m_Mutex;
 
 public:
 
@@ -71,6 +74,8 @@ public:
 
 	bool Put(const char* key, const ElementType* element)
 	{
+		ScopedMutex scope(m_Mutex);
+
 		if (Exists(key))
 			return false;
 
@@ -91,6 +96,8 @@ public:
 
 	bool Get(const char* key, ElementType* element)
 	{
+		ScopedMutex scope(m_Mutex);
+
 		int h = Hash(key);
 
 		int index = Find(h, key);
@@ -105,6 +112,8 @@ public:
 
 	bool Remove(const char* key)
 	{
+		ScopedMutex scope(m_Mutex);
+
 		int h = Hash(key);
 
 		int index = Find(h, key);
@@ -121,6 +130,8 @@ public:
 	template<int MaxNumOfKeys>
 	void Keys(char keys[MaxNumOfKeys][HASH_MAP_KEY_LEN], unsigned int& outNumOfKeys)
 	{
+		ScopedMutex scope(m_Mutex);
+
 		int keyIdx = 0;
 
 		for (int row = 0; row < MapSize; row++)
@@ -142,6 +153,8 @@ public:
 
 	void Clear()
 	{
+		ScopedMutex scope(m_Mutex);
+
 		for (int row = 0; row < MapSize; row++)
 		{
 			for (int col = 0; col < m_Depth; col++)
@@ -155,21 +168,29 @@ public:
 
 	bool Empty()
 	{
+		ScopedMutex scope(m_Mutex);
+
 		return Size() == 0;
 	}
 
 	bool Full()
 	{
+		ScopedMutex scope(m_Mutex);
+
 		return Size() == MapSize * m_Depth;
 	}
 
 	unsigned int Size()
 	{
+		ScopedMutex scope(m_Mutex);
+
 		return m_Count;
 	}
 
 	bool Exists(const char* key)
 	{
+		ScopedMutex scope(m_Mutex);
+
 		int h = Hash(key);
 
 		return Find(h, key) >= 0;

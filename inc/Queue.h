@@ -96,6 +96,15 @@ public:
 		return true;
 	}
 
+	void Clear()
+	{
+		ScopedMutex scope(m_Mutex);
+
+		m_Count = 0;
+		m_Top = -1;
+		m_Bottom = -1;
+	}
+
 	bool Empty()
 	{
 		ScopedMutex scope(m_Mutex);
@@ -105,6 +114,8 @@ public:
 
 	bool Full()
 	{
+		ScopedMutex scope(m_Mutex);
+
 		return Size() == m_Depth;
 	}
 
