@@ -18,24 +18,37 @@ void HashMapTest()
 	map.Put("rachel", &val);
 	Check.Equals(map.Size(), 3U, "map size after put 3");
 
-	bool peeked = map.Peek("hilla", &val);
-	Check.True(peeked, "peek");
-	Check.Equals(val, 100, "peek value");
-	Check.Equals(map.Size(), 3U, "size remain after peek");
-
 	map.Get("hilla", &val);
 	Check.Equals(val, 100, "get 1 value");
-	Check.Equals(map.Size(), 2U, "size after get 1");
 
 	map.Get("rachel", &val);
 	Check.Equals(val, 1000, "get 2 value");
-	Check.Equals(map.Size(), 1U, "size after get 2");
 
 	map.Get("assaf", &val);
 	Check.Equals(val, 10, "get 3 value");
-	Check.Zero(map.Size(), "size after get 3");
 
-	Check.True(map.Empty(), "map is empty");
+	map.Clear();
+	Check.True(map.Empty(), "map is empty after clear");
+
+	val = 100;
+	map.Put("hilla", &val);
+	Check.Equals(map.Size(), 1U, "map size after put 4");
+
+	val = 1000;
+	map.Put("rachel", &val);
+	Check.Equals(map.Size(), 2U, "map size after put 5");
+
+	unsigned int numOfKeys = 0;
+	char keys[3][HASH_MAP_KEY_LEN];
+	map.Keys<3>(keys, numOfKeys);
+	Check.Equals(numOfKeys, 2U, "2 keys!");
+
+	for (int i = 0; i < numOfKeys; i++) {
+		const char* key = keys[i];
+		Check.True(map.Remove(key), "key removed");
+	}
+
+	Check.True(map.Empty(), "map is empty after remove");
 
 	Check.End("HashMap");
 }

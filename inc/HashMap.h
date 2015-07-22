@@ -78,26 +78,12 @@ public:
 
 		for (int i = 0; i < m_Depth; i++)
 		{
-			if (m_Elements[h][i].Used == 0)
+			if (!m_Elements[h][i].Used)
 			{
 				m_Elements[h][i].Set(key, element);
 				m_Count++;
 				return true;
 			}
-		}
-
-		return false;
-	}
-
-	bool Peek(const char* key, ElementType* element)
-	{
-		int h = Hash(key);
-
-		int index = Find(h, key);
-		if (index >= 0)
-		{
-			*element = m_Elements[h][index].Data;
-			return true;
 		}
 
 		return false;
@@ -111,12 +97,60 @@ public:
 		if (index >= 0)
 		{
 			*element = m_Elements[h][index].Data;
+			return true;
+		}
+
+		return false;
+	}
+
+	bool Remove(const char* key)
+	{
+		int h = Hash(key);
+
+		int index = Find(h, key);
+		if (index >= 0)
+		{
 			m_Elements[h][index].Reset();
 			m_Count--;
 			return true;
 		}
 
 		return false;
+	}
+
+	template<int MaxNumOfKeys>
+	void Keys(char keys[MaxNumOfKeys][HASH_MAP_KEY_LEN], unsigned int& outNumOfKeys)
+	{
+		int keyIdx = 0;
+
+		for (int row = 0; row < MapSize; row++)
+		{
+			for (int col = 0; col < m_Depth; col++)
+			{
+				if (m_Elements[row][col].Used)
+				{
+					strncpy(keys[keyIdx], m_Elements[row][col].Key, HASH_MAP_KEY_LEN);
+					keyIdx++;
+					if (keyIdx >= MaxNumOfKeys)
+						break;
+				}
+			}
+		}
+
+		outNumOfKeys = keyIdx;
+	}
+
+	void Clear()
+	{
+		for (int row = 0; row < MapSize; row++)
+		{
+			for (int col = 0; col < m_Depth; col++)
+			{
+				m_Elements[row][col].Reset();
+			}
+		}
+
+		m_Count = 0;
 	}
 
 	bool Empty()
@@ -149,7 +183,7 @@ private:
 
 		for (int i = 0; i < m_Depth; i++)
 		{
-			if (m_Elements[h][i].Used == 1)
+			if (m_Elements[h][i].Used)
 			{
 				if (m_Elements[h][i].Compare(key))
 				{
