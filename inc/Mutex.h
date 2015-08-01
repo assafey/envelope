@@ -2,7 +2,7 @@
  * File name	: Mutex.h
  * Date Created	: 12.7.15
  * Author		: Assaf Grimberg
- * Description	: Mutex envelope for pthread_mutex
+ * Description	: Mutex warpper for pthread_mutex
  *
  * Change log:
  * [+] 2015-07-12, Assaf Grimberg: File Created.

@@ -2,6 +2,7 @@
 #include "StackTest.h"
 #include "HashMapTest.h"
 #include "QueueTest.h"
+#include "ListTest.h"
 
 int main()
 {
@@ -9,4 +10,5 @@ int main()
 	StackTest();
 	HashMapTest();
 	QueueTest();
+	ListTest();
 }

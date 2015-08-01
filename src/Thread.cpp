@@ -2,7 +2,7 @@
  * File name	: Thread.cpp
  * Date Created	: 12.7.15
  * Author		: Assaf Grimberg
- * Description	: Thread envelope for pthread
+ * Description	: Thread wrapper for pthread
  * 
  * Change log:
  * [+] 2015-07-12, Assaf Grimberg: File Created.
